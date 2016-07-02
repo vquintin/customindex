@@ -1,0 +1,12 @@
+{
+    "name":"Index Perso",
+    "initialValue":{
+        "amount":1000,
+        "currency":"EUR"
+    },
+    "creation":"2016-01-01T00:00:00Z",
+    "weights":[
+        {"capital":{"symbol":"AAPL","currency":"USD"},"weight":1},
+        {"capital":{"amount":1000,"currency":"EUR"},"weight":1}
+    ]
+}
