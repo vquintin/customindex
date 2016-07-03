@@ -10,8 +10,8 @@ var index1 = Index{
 	"Index 1",
 	MoneyAmount{1000, "EUR"},
 	time.Date(2016, 1, 1, 0, 0, 0, 0, time.UTC),
-	[]Weight{
-		Weight{MoneyAmount{1000, "USD"}, 1.0},
+	map[Capital]float64{
+		MoneyAmount{1000, "USD"}: 1.0,
 	},
 }
 
@@ -32,9 +32,9 @@ var index2 = Index{
 	"Index 2",
 	MoneyAmount{1000, "EUR"},
 	time.Date(2016, 1, 1, 0, 0, 0, 0, time.UTC),
-	[]Weight{
-		Weight{MoneyAmount{1000, "USD"}, 1.0},
-		Weight{MoneyAmount{1000, "EUR"}, 1.0},
+	map[Capital]float64{
+		MoneyAmount{1000, "USD"}: 1.0,
+		MoneyAmount{1000, "EUR"}: 1.0,
 	},
 }
 
@@ -53,9 +53,9 @@ var index3 = Index{
 	"Index Perso",
 	MoneyAmount{1000, "EUR"},
 	time.Date(2016, 1, 1, 0, 0, 0, 0, time.UTC),
-	[]Weight{
-		Weight{Equity{"AAPL", "USD"}, 1.0},
-		Weight{MoneyAmount{1000, "EUR"}, 1.0},
+	map[Capital]float64{
+		Equity{"AAPL", "USD"}:    1.0,
+		MoneyAmount{1000, "EUR"}: 1.0,
 	},
 }
 
@@ -65,4 +65,9 @@ func TestMarshallingDoesNotReturnAnError(t *testing.T) {
 		t.Error(err)
 	}
 	t.Log(string(bytes))
+	index := Index{}
+	err = json.Unmarshal(bytes, &index)
+	if err != nil {
+		t.Error(err)
+	}
 }

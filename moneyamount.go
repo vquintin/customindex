@@ -23,6 +23,9 @@ func (p MoneyAmount) Value(date time.Time) (MoneyAmount, error) {
 }
 
 func (p *MoneyAmount) Convert(other Currency, date time.Time) (MoneyAmount, error) {
+	if p.Currency == other {
+		return *p, nil
+	}
 	rates, err := ecbrates.Load()
 	var before ecbrates.Rates
 	for _, v := range rates {
