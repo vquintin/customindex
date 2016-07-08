@@ -10,15 +10,15 @@ var index1 = Index{
 	"Index 1",
 	MoneyAmount{1000, "EUR"},
 	time.Date(2016, 1, 1, 0, 0, 0, 0, time.UTC),
-	map[Capital]float64{
-		MoneyAmount{1000, "USD"}: 1.0,
+	map[Asset]float64{
+		Currency("USD"): 1.0,
 	},
 }
 
 const magic = 996.9779865952726
 
 func TestConvertToTargetCurrencyBeforeComputePerformanceRatio(t *testing.T) {
-	actual, err := index1.Value(time.Date(2016, 2, 1, 0, 0, 0, 0, time.UTC))
+	actual, err := index1.UnitPrice(time.Date(2016, 2, 1, 0, 0, 0, 0, time.UTC))
 	if err != nil {
 		t.Error(err)
 	}
@@ -32,14 +32,14 @@ var index2 = Index{
 	"Index 2",
 	MoneyAmount{1000, "EUR"},
 	time.Date(2016, 1, 1, 0, 0, 0, 0, time.UTC),
-	map[Capital]float64{
-		MoneyAmount{1000, "USD"}: 1.0,
-		MoneyAmount{1000, "EUR"}: 1.0,
+	map[Asset]float64{
+		Currency("USD"): 1.0,
+		Currency("EUR"): 1.0,
 	},
 }
 
 func TestThatIndexWeightingIsNotObviouslyWrong(t *testing.T) {
-	actual, err := index2.Value(time.Date(2016, 2, 1, 0, 0, 0, 0, time.UTC))
+	actual, err := index2.UnitPrice(time.Date(2016, 2, 1, 0, 0, 0, 0, time.UTC))
 	if err != nil {
 		t.Error(err)
 	}
@@ -53,9 +53,9 @@ var index3 = Index{
 	"Index Perso",
 	MoneyAmount{1000, "EUR"},
 	time.Date(2016, 1, 1, 0, 0, 0, 0, time.UTC),
-	map[Capital]float64{
-		Equity{"AAPL", "USD"}:    1.0,
-		MoneyAmount{1000, "EUR"}: 1.0,
+	map[Asset]float64{
+		Equity{"AAPL", "USD"}: 1.0,
+		Currency("EUR"):       1.0,
 	},
 }
 

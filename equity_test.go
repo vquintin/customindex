@@ -7,7 +7,7 @@ import (
 
 func TestEquityValueReturnsFridayPriceWhenDateIsSunday(t *testing.T) {
 	e := Equity{"AAPL", "USD"}
-	actual, err := e.Value(time.Date(2016, 06, 26, 0, 0, 0, 0, time.UTC))
+	actual, err := e.UnitPrice(time.Date(2016, 06, 26, 0, 0, 0, 0, time.UTC))
 	if err != nil {
 		t.Error(err)
 	}

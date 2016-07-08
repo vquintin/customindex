@@ -2,12 +2,12 @@
     "name":"Index Perso",
     "initialValue":{"amount":1000,"currency":"EUR"},
     "creation":"2016-01-01T00:00:00Z",
-    "moneyAmounts":[],
+    "currencies":[],
     "equities":[
         {"symbol":"ACIM.L","currency":"GBP","Weight":75},
         {"symbol":"CRP.PA","currency":"EUR","Weight":10},
         {"symbol":"MTX.PA","currency":"EUR","Weight":10},
-        {"symbol":"IAU","currency":"USD","Weight":10}
+        {"symbol":"IAU","currency":"USD","Weight":5}
     ],
     "indexes":[]
 }

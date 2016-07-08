@@ -7,8 +7,6 @@ import (
 	"github.com/openprovider/ecbrates"
 )
 
-type Currency string
-
 type MoneyAmount struct {
 	Amount   float64  `json:"amount"`
 	Currency Currency `json:"currency"`
@@ -38,6 +36,7 @@ func (p *MoneyAmount) Convert(other Currency, date time.Time) (MoneyAmount, erro
 			break
 		}
 	}
+	fmt.Println(before)
 	amount, err := before.Convert(p.Amount, ecbrates.Currency(p.Currency), ecbrates.Currency(other))
 	return MoneyAmount{amount, other}, err
 }

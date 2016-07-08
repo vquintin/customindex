@@ -20,7 +20,7 @@ func (e Equity) String() string {
 
 const week = 168 * time.Hour
 
-func (e Equity) Value(date time.Time) (MoneyAmount, error) {
+func (e Equity) UnitPrice(date time.Time) (MoneyAmount, error) {
 	start := date.Add(-week)
 	prices, err := yquotes.GetDailyHistory(string(e.Symbol), start, date)
 	if err != nil {

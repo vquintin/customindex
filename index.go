@@ -9,20 +9,20 @@ type Index struct {
 	name         string
 	initialValue MoneyAmount
 	creation     time.Time
-	weights      map[Capital]float64
+	weights      map[Asset]float64
 }
 
 type IndexSP struct {
-	Name         string              `json:"name"`
-	InitialValue MoneyAmount         `json:"initialValue"`
-	Creation     time.Time           `json:"creation"`
-	MoneyAmounts []MoneyAmountWeight `json:"moneyAmounts"`
-	Equities     []EquityWeight      `json:"equities"`
-	Indexes      []IndexWeight       `json:"indexes"`
+	Name         string           `json:"name"`
+	InitialValue MoneyAmount      `json:"initialValue"`
+	Creation     time.Time        `json:"creation"`
+	Currencies   []CurrencyWeight `json:"currencies"`
+	Equities     []EquityWeight   `json:"equities"`
+	Indexes      []IndexWeight    `json:"indexes"`
 }
 
-type MoneyAmountWeight struct {
-	MoneyAmount
+type CurrencyWeight struct {
+	Currency
 	Weight float64
 }
 
@@ -37,11 +37,11 @@ type IndexWeight struct {
 }
 
 func (i Index) MarshalJSON() ([]byte, error) {
-	sp := IndexSP{i.name, i.initialValue, i.creation, []MoneyAmountWeight{}, []EquityWeight{}, []IndexWeight{}}
+	sp := IndexSP{i.name, i.initialValue, i.creation, []CurrencyWeight{}, []EquityWeight{}, []IndexWeight{}}
 	for k, v := range i.weights {
 		switch k := k.(type) {
-		case MoneyAmount:
-			sp.MoneyAmounts = append(sp.MoneyAmounts, MoneyAmountWeight{k, v})
+		case Currency:
+			sp.Currencies = append(sp.Currencies, CurrencyWeight{k, v})
 		case Equity:
 			sp.Equities = append(sp.Equities, EquityWeight{k, v})
 		case Index:
@@ -60,9 +60,9 @@ func (index *Index) UnmarshalJSON(data []byte) error {
 	index.name = sp.Name
 	index.creation = sp.Creation
 	index.initialValue = sp.InitialValue
-	index.weights = make(map[Capital]float64)
-	for _, v := range sp.MoneyAmounts {
-		index.weights[v.MoneyAmount] = v.Weight
+	index.weights = make(map[Asset]float64)
+	for _, v := range sp.Currencies {
+		index.weights[v.Currency] = v.Weight
 	}
 	for _, v := range sp.Equities {
 		index.weights[v.Equity] = v.Weight
@@ -78,12 +78,12 @@ type ratioAndErr struct {
 	err   error
 }
 
-func (index Index) Value(date time.Time) (MoneyAmount, error) {
+func (index Index) UnitPrice(date time.Time) (MoneyAmount, error) {
 	quit := make(chan interface{})
 	c := make(chan ratioAndErr)
 	var weightSum float64
 	for k, v := range index.weights {
-		go func(k Capital, v float64) {
+		go func(k Asset, v float64) {
 			ratio, err := performanceRatio(k, index.creation, date, index.initialValue.Currency)
 			select {
 			case c <- ratioAndErr{v * ratio, err}:
@@ -109,14 +109,14 @@ type maAndErr struct {
 	err error
 }
 
-func performanceRatio(capital Capital, start time.Time, end time.Time, currency Currency) (float64, error) {
+func performanceRatio(asset Asset, start time.Time, end time.Time, currency Currency) (float64, error) {
 	initialValue := make(chan maAndErr)
 	finalValue := make(chan maAndErr)
 	go func() {
-		initialValue <- capitalValueInCurrency(capital, start, currency)
+		initialValue <- capitalValueInCurrency(asset, start, currency)
 	}()
 	go func() {
-		finalValue <- capitalValueInCurrency(capital, end, currency)
+		finalValue <- capitalValueInCurrency(asset, end, currency)
 	}()
 	initialResult := <-initialValue
 	finalResult := <-finalValue
@@ -129,8 +129,8 @@ func performanceRatio(capital Capital, start time.Time, end time.Time, currency 
 	}
 }
 
-func capitalValueInCurrency(capital Capital, date time.Time, currency Currency) maAndErr {
-	ma, err := capital.Value(date)
+func capitalValueInCurrency(asset Asset, date time.Time, currency Currency) maAndErr {
+	ma, err := asset.UnitPrice(date)
 	if err != nil {
 		return maAndErr{ma, err}
 	}

@@ -24,7 +24,7 @@ func main() {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
-	ma, err := index.Value(time.Now())
+	ma, err := index.UnitPrice(time.Now())
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
