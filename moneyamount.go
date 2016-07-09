@@ -11,11 +11,11 @@ func (p MoneyAmount) String() string {
 	return fmt.Sprintf("%v %v", p.Amount, p.Currency)
 }
 
-func (p *MoneyAmount) Mul(ratio float64) MoneyAmount {
+func (p MoneyAmount) Mul(ratio float64) MoneyAmount {
 	return MoneyAmount{p.Amount * ratio, p.Currency}
 }
 
-func (p *MoneyAmount) Div(other MoneyAmount) (float64, error) {
+func (p MoneyAmount) Div(other MoneyAmount) (float64, error) {
 	if p.Currency == other.Currency {
 		return p.Amount / other.Amount, nil
 	}

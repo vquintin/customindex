@@ -2,7 +2,6 @@ package customindex
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"testing"
 	"time"
@@ -16,7 +15,6 @@ func TestFixerResponseUnmarshalling(t *testing.T) {
 	err = json.Unmarshal(jsonResponse, &fxResp)
 
 	assertNoError(t, err)
-	fmt.Println(fxResp)
 	assertEquals(t, "The value for DKK is not as expected", 7.438, fxResp.Rates.DKK)
 }
 

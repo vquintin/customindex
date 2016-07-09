@@ -24,7 +24,7 @@ func TestIndexStoreCallsNextInChainWhenAssetIsNotIndex(t *testing.T) {
 		assetAndDate{42, startDate}: expected,
 	}}
 	rateStoreMock := exchangeRateStoreMock{}
-	store := IndexPriceStore{&headMock, &nextMock, &rateStoreMock}
+	store := IndexPriceStore{&nextMock, &headMock, &rateStoreMock}
 
 	actual, err := store.UnitPrice(42, startDate)
 
@@ -45,7 +45,7 @@ func TestConvertToTargetCurrencyBeforeComputePerformanceRatio(t *testing.T) {
 		currencyPairWithDate{endDate, "EUR", "USD"}:   1.00,
 	}
 	rateStoreMock := exchangeRateStoreMock{rates}
-	store := IndexPriceStore{&headMock, &nextMock, &rateStoreMock}
+	store := IndexPriceStore{&nextMock, &headMock, &rateStoreMock}
 	actual, err := store.UnitPrice(index1, endDate)
 	assertFalse(t, "The next store in chain was called", nextMock.Called)
 	assertNil(t, "An error occured", err)
@@ -76,7 +76,7 @@ func TestThatIndexWeightingIsNotObviouslyWrong(t *testing.T) {
 		currencyPairWithDate{endDate, "EUR", "USD"}:   1.00,
 	}
 	rateStoreMock := exchangeRateStoreMock{rates}
-	store := IndexPriceStore{&headMock, &nextMock, &rateStoreMock}
+	store := IndexPriceStore{&nextMock, &headMock, &rateStoreMock}
 	actual, err := store.UnitPrice(index2, endDate)
 	assertFalse(t, "The next store in chain was called", nextMock.Called)
 	assertNil(t, "An error occured.", err)
