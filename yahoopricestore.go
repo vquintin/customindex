@@ -11,7 +11,7 @@ type YahooPriceStore struct {
 	next PriceStore
 }
 
-func (store YahooPriceStore) UnitPrice(asset interface{}, date time.Time) (MoneyAmount, error) {
+func (store *YahooPriceStore) UnitPrice(asset interface{}, date time.Time) (MoneyAmount, error) {
 	switch asset := asset.(type) {
 	case Equity:
 		return store.unitPriceForEquity(asset, date)
@@ -20,7 +20,7 @@ func (store YahooPriceStore) UnitPrice(asset interface{}, date time.Time) (Money
 	}
 }
 
-func (store YahooPriceStore) unitPriceForEquity(equity Equity, date time.Time) (MoneyAmount, error) {
+func (store *YahooPriceStore) unitPriceForEquity(equity Equity, date time.Time) (MoneyAmount, error) {
 	start := date.Add(-week)
 	prices, err := yquotes.GetDailyHistory(string(equity.Symbol), start, date)
 	if err != nil {

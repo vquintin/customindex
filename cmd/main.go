@@ -24,7 +24,8 @@ func main() {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
-	ma, err := index.UnitPrice(time.Now())
+	store := customindex.NewDefaultPriceStore()
+	ma, err := store.UnitPrice(index, time.Now())
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)

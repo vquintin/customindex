@@ -112,6 +112,8 @@ func (fr fixerResponse) getRateFromEURTo(targetCurrency Currency) (float64, erro
 		return fr.Rates.THB, nil
 	case "TRY":
 		return fr.Rates.TRY, nil
+	case "USD":
+		return fr.Rates.USD, nil
 	case "ZAR":
 		return fr.Rates.ZAR, nil
 	default:

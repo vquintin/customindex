@@ -3,8 +3,8 @@ package customindex
 import "time"
 
 type IndexPriceStore struct {
-	head      PriceStore
 	next      PriceStore
+	head      PriceStore
 	rateStore ExchangeRateStore
 }
 
