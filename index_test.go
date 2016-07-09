@@ -6,54 +6,11 @@ import (
 	"time"
 )
 
-var index1 = Index{
-	"Index 1",
-	MoneyAmount{1000, "EUR"},
-	time.Date(2016, 1, 1, 0, 0, 0, 0, time.UTC),
-	map[Asset]float64{
-		Currency("USD"): 1.0,
-	},
-}
-
-const magic = 996.9779865952726
-
-func TestConvertToTargetCurrencyBeforeComputePerformanceRatio(t *testing.T) {
-	actual, err := index1.UnitPrice(time.Date(2016, 2, 1, 0, 0, 0, 0, time.UTC))
-	if err != nil {
-		t.Error(err)
-	}
-	expected := MoneyAmount{magic, "EUR"}
-	if actual != expected {
-		t.Errorf("The value of the index is not as expected. Expected: %v. Got: %v", expected, actual)
-	}
-}
-
-var index2 = Index{
-	"Index 2",
-	MoneyAmount{1000, "EUR"},
-	time.Date(2016, 1, 1, 0, 0, 0, 0, time.UTC),
-	map[Asset]float64{
-		Currency("USD"): 1.0,
-		Currency("EUR"): 1.0,
-	},
-}
-
-func TestThatIndexWeightingIsNotObviouslyWrong(t *testing.T) {
-	actual, err := index2.UnitPrice(time.Date(2016, 2, 1, 0, 0, 0, 0, time.UTC))
-	if err != nil {
-		t.Error(err)
-	}
-	expected := MoneyAmount{magic/2.0 + 500.0, "EUR"}
-	if actual != expected {
-		t.Errorf("The value of the index is not as expected. Expected: %v. Got: %v", expected, actual)
-	}
-}
-
 var index3 = Index{
 	"Index Perso",
 	MoneyAmount{1000, "EUR"},
 	time.Date(2016, 1, 1, 0, 0, 0, 0, time.UTC),
-	map[Asset]float64{
+	map[interface{}]float64{
 		Equity{"AAPL", "USD"}: 1.0,
 		Currency("EUR"):       1.0,
 	},
