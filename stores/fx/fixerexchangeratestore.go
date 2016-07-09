@@ -1,4 +1,4 @@
-package customindex
+package fx
 
 import (
 	"encoding/json"
@@ -6,6 +6,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"time"
+
+	"bitbucket.org/virgilequintin/customindex/assets"
 )
 
 type rates struct {
@@ -48,7 +50,7 @@ type fixerResponse struct {
 	Rates rates  `json:"rates"`
 }
 
-func (fr fixerResponse) getRateFromEURTo(targetCurrency Currency) (float64, error) {
+func (fr fixerResponse) getRateFromEURTo(targetCurrency assets.Currency) (float64, error) {
 	if targetCurrency == "EUR" {
 		return 1.0, nil
 	}
@@ -124,20 +126,20 @@ func (fr fixerResponse) getRateFromEURTo(targetCurrency Currency) (float64, erro
 type FixerExchangeRateStore struct {
 }
 
-func (store FixerExchangeRateStore) Convert(moneyAmount MoneyAmount, targetCurrency Currency, date time.Time) (MoneyAmount, error) {
+func (store FixerExchangeRateStore) Convert(moneyAmount assets.MoneyAmount, targetCurrency assets.Currency, date time.Time) (assets.MoneyAmount, error) {
 	fxResp, err := store.getFixerResponse(date)
 	if err != nil {
-		return MoneyAmount{}, err
+		return assets.MoneyAmount{}, err
 	}
 	sourceRate, err := fxResp.getRateFromEURTo(moneyAmount.Currency)
 	if err != nil {
-		return MoneyAmount{}, err
+		return assets.MoneyAmount{}, err
 	}
 	targetRate, err := fxResp.getRateFromEURTo(targetCurrency)
 	if err != nil {
-		return MoneyAmount{}, err
+		return assets.MoneyAmount{}, err
 	}
-	return MoneyAmount{moneyAmount.Amount * targetRate / sourceRate, targetCurrency}, nil
+	return assets.MoneyAmount{moneyAmount.Amount * targetRate / sourceRate, targetCurrency}, nil
 }
 
 const fixerURL = "http://api.fixer.io/"

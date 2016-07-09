@@ -8,7 +8,8 @@ import (
 	"os"
 	"time"
 
-	"bitbucket.org/virgilequintin/customindex"
+	"bitbucket.org/virgilequintin/customindex/assets"
+	"bitbucket.org/virgilequintin/customindex/stores/factory"
 )
 
 func main() {
@@ -21,13 +22,13 @@ func main() {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
-	var index customindex.Index
+	var index assets.Index
 	err = json.Unmarshal(content, &index)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
-	store := customindex.NewDefaultPriceStore()
+	store := factory.NewPriceStore()
 	ma, err := store.UnitPrice(index, time.Now())
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)

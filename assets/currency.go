@@ -1,3 +1,3 @@
-package customindex
+package assets
 
 type Currency string

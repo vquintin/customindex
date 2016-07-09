@@ -1,4 +1,4 @@
-package customindex
+package assets
 
 import (
 	"encoding/json"

@@ -1,4 +1,4 @@
-package customindex
+package assets
 
 import (
 	"encoding/json"
@@ -6,10 +6,10 @@ import (
 )
 
 type Index struct {
-	name         string
-	initialValue MoneyAmount
-	creation     time.Time
-	weights      map[interface{}]float64
+	Name         string
+	InitialValue MoneyAmount
+	Creation     time.Time
+	Weights      map[interface{}]float64
 }
 
 type IndexSP struct {
@@ -37,8 +37,8 @@ type IndexWeight struct {
 }
 
 func (i Index) MarshalJSON() ([]byte, error) {
-	sp := IndexSP{i.name, i.initialValue, i.creation, []CurrencyWeight{}, []EquityWeight{}, []IndexWeight{}}
-	for k, v := range i.weights {
+	sp := IndexSP{i.Name, i.InitialValue, i.Creation, []CurrencyWeight{}, []EquityWeight{}, []IndexWeight{}}
+	for k, v := range i.Weights {
 		switch k := k.(type) {
 		case Currency:
 			sp.Currencies = append(sp.Currencies, CurrencyWeight{k, v})
@@ -57,18 +57,18 @@ func (index *Index) UnmarshalJSON(data []byte) error {
 	if err != nil {
 		return err
 	}
-	index.name = sp.Name
-	index.creation = sp.Creation
-	index.initialValue = sp.InitialValue
-	index.weights = make(map[interface{}]float64)
+	index.Name = sp.Name
+	index.Creation = sp.Creation
+	index.InitialValue = sp.InitialValue
+	index.Weights = make(map[interface{}]float64)
 	for _, v := range sp.Currencies {
-		index.weights[v.Currency] = v.Weight
+		index.Weights[v.Currency] = v.Weight
 	}
 	for _, v := range sp.Equities {
-		index.weights[v.Equity] = v.Weight
+		index.Weights[v.Equity] = v.Weight
 	}
 	for _, v := range sp.Indexes {
-		index.weights[v.Index] = v.Weight
+		index.Weights[v.Index] = v.Weight
 	}
 	return nil
 }
