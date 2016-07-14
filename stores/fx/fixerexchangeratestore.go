@@ -127,6 +127,9 @@ type FixerExchangeRateStore struct {
 }
 
 func (store FixerExchangeRateStore) Convert(moneyAmount assets.MoneyAmount, targetCurrency assets.Currency, date time.Time) (assets.MoneyAmount, error) {
+	if moneyAmount.Currency == targetCurrency {
+		return moneyAmount, nil
+	}
 	fxResp, err := store.getFixerResponse(date)
 	if err != nil {
 		return assets.MoneyAmount{}, err
