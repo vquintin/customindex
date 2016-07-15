@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+// Index represents an price index with fixed-weight components
 type Index struct {
 	Name         string
 	InitialValue MoneyAmount
@@ -12,6 +13,8 @@ type Index struct {
 	Weights      map[interface{}]float64
 }
 
+// IndexSP is a serialization proxy for Index.
+// Only the types "Currency", "Equity" and "Index" can be serialized.
 type IndexSP struct {
 	Name         string           `json:"name"`
 	InitialValue MoneyAmount      `json:"initialValue"`
@@ -21,16 +24,19 @@ type IndexSP struct {
 	Indexes      []IndexWeight    `json:"indexes"`
 }
 
+// CurrencyWeight is the weight of a currency in the index.
 type CurrencyWeight struct {
 	Currency
 	Weight float64
 }
 
+// EquityWeight is the weight of a stock in the index.
 type EquityWeight struct {
 	Equity
 	Weight float64
 }
 
+// IndexWeight is the weight of a component index in the index.
 type IndexWeight struct {
 	Index
 	Weight float64
