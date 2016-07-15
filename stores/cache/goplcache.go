@@ -1,6 +1,7 @@
 package cache
 
 import "sync"
+import "reflect"
 
 type entry struct {
 	res   result
@@ -12,20 +13,29 @@ type result struct {
 	err   error
 }
 
-func New(f Func) *memo {
+func newGoPLCache(f fct) *memo {
 	return &memo{f: f, cache: make(map[interface{}]*entry)}
 }
 
 type memo struct {
-	f     Func
+	f     fct
 	mu    sync.Mutex // guards cache
 	cache map[interface{}]*entry
 }
 
 // Func is the type of the function to memoize.
-type Func func(key interface{}) (interface{}, error)
+type fct func(key interface{}) (interface{}, error)
 
-func (memo *memo) Get(key interface{}) (value interface{}, err error) {
+func (memo *memo) get(key interface{}) (value interface{}, err error) {
+	k := reflect.TypeOf(key).Kind()
+	hashable := k < reflect.Array || k == reflect.Ptr || k == reflect.UnsafePointer
+	if hashable {
+		return memo.getFromCache(key)
+	}
+	return memo.f(key)
+}
+
+func (memo *memo) getFromCache(key interface{}) (value interface{}, err error) {
 	memo.mu.Lock()
 	e := memo.cache[key]
 	if e == nil {

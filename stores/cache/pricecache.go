@@ -18,16 +18,15 @@ type priceCacheKey struct {
 
 func (pc PriceCache) UnitPrice(asset interface{}, date time.Time) (assets.MoneyAmount, error) {
 	key := priceCacheKey{asset, date}
-	val, err := pc.Get(key)
+	val, err := pc.get(key)
 	return val.(assets.MoneyAmount), err
 }
 
 func NewPriceCache(cached stores.PriceStore) PriceCache {
-	memo := memo{cache: make(map[interface{}]*entry)}
-	pc := PriceCache{memo}
-	pc.f = func(key interface{}) (interface{}, error) {
+	memo := newGoPLCache(func(key interface{}) (interface{}, error) {
 		k := key.(priceCacheKey)
 		return cached.UnitPrice(k.asset, k.date)
-	}
+	})
+	pc := PriceCache{*memo}
 	return pc
 }
