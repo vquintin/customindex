@@ -1,10 +1,7 @@
 package index
 
 import (
-	"reflect"
 	"time"
-
-	"fmt"
 
 	"github.com/vquintin/customindex/assets"
 	"github.com/vquintin/customindex/stores"
@@ -87,7 +84,6 @@ func (store IndexPricer) performanceRatio(asset interface{}, start time.Time, en
 }
 
 func (store IndexPricer) capitalValueInCurrency(asset interface{}, date time.Time, currency assets.Currency) maAndErr {
-	fmt.Printf("Calling %v\n", reflect.TypeOf(store.Head))
 	ma, err := store.Head.UnitPrice(asset, date)
 	if err != nil {
 		return maAndErr{ma, err}
