@@ -9,30 +9,30 @@ import (
 	"bitbucket.org/virgilequintin/customindex/assets"
 )
 
-type priceStoreMock struct {
+type pricerMock struct {
 	mutex sync.RWMutex
 	calls uint
 }
 
-func (mock *priceStoreMock) UnitPrice(asset interface{}, date time.Time) (assets.MoneyAmount, error) {
+func (mock *pricerMock) UnitPrice(asset interface{}, date time.Time) (assets.MoneyAmount, error) {
 	mock.IncrementCalls()
 	return assets.MoneyAmount{}, nil
 }
 
-func (mock *priceStoreMock) IncrementCalls() {
+func (mock *pricerMock) IncrementCalls() {
 	mock.mutex.Lock()
 	mock.calls++
 	mock.mutex.Unlock()
 }
 
-func (mock *priceStoreMock) Calls() uint {
+func (mock *pricerMock) Calls() uint {
 	mock.mutex.RLock()
 	defer mock.mutex.RUnlock()
 	return mock.calls
 }
 
 func TestCachedPriceStoreIsOnlyCalledOnce(t *testing.T) {
-	mock := priceStoreMock{}
+	mock := pricerMock{}
 	store := NewPricerCache(&mock)
 	asset := 42
 	date := time.Now()

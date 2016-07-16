@@ -123,10 +123,12 @@ func (fr fixerResponse) getRateFromEURTo(targetCurrency assets.Currency) (float6
 	}
 }
 
-type FixerExchangeRateStore struct {
+// FixerChanger is a Changer which the rates found on fixer.io
+type FixerChanger struct {
 }
 
-func (store FixerExchangeRateStore) Convert(moneyAmount assets.MoneyAmount, targetCurrency assets.Currency, date time.Time) (assets.MoneyAmount, error) {
+// Change changes a money amount to another currency using rates found on fixer.io
+func (store FixerChanger) Change(moneyAmount assets.MoneyAmount, targetCurrency assets.Currency, date time.Time) (assets.MoneyAmount, error) {
 	if moneyAmount.Currency == targetCurrency {
 		return moneyAmount, nil
 	}
@@ -142,12 +144,12 @@ func (store FixerExchangeRateStore) Convert(moneyAmount assets.MoneyAmount, targ
 	if err != nil {
 		return assets.MoneyAmount{}, err
 	}
-	return assets.MoneyAmount{moneyAmount.Amount * targetRate / sourceRate, targetCurrency}, nil
+	return assets.MoneyAmount{Amount: moneyAmount.Amount * targetRate / sourceRate, Currency: targetCurrency}, nil
 }
 
 const fixerURL = "http://api.fixer.io/"
 
-func (store FixerExchangeRateStore) getFixerResponse(date time.Time) (fixerResponse, error) {
+func (store FixerChanger) getFixerResponse(date time.Time) (fixerResponse, error) {
 	requestURL := fixerURL + date.Format("2006-01-02")
 	resp, err := http.Get(requestURL)
 	if err != nil {

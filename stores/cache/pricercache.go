@@ -28,7 +28,7 @@ func (pc PricerCache) UnitPrice(asset interface{}, date time.Time) (assets.Money
 	return val.(assets.MoneyAmount), err
 }
 
-// NewPriceCache makes a price store cache caching the given store.
+// NewPricerCache makes a price store cache caching the given store.
 func NewPricerCache(cached stores.Pricer) PricerCache {
 	memo := newGoPLCache(func(key interface{}) (interface{}, error) {
 		k := key.(pricerCacheKey)

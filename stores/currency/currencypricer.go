@@ -7,7 +7,7 @@ import (
 	"bitbucket.org/virgilequintin/customindex/stores"
 )
 
-// CurrencyPriceStore is a store used to retrieve the price of a currency.
+// CurrencyPricer is a store used to retrieve the price of a currency.
 type CurrencyPricer struct {
 	Next stores.Pricer
 }

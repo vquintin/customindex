@@ -13,11 +13,11 @@ type CurrencyPairWithDate struct {
 	R    assets.Currency
 }
 
-type ExchangeRateStoreMock struct {
+type ChangerMock struct {
 	Rates map[CurrencyPairWithDate]float64
 }
 
-func (store *ExchangeRateStoreMock) Convert(moneyAmount assets.MoneyAmount, targetCurrency assets.Currency, date time.Time) (assets.MoneyAmount, error) {
+func (store *ChangerMock) Convert(moneyAmount assets.MoneyAmount, targetCurrency assets.Currency, date time.Time) (assets.MoneyAmount, error) {
 	sourceCurrency := moneyAmount.Currency
 	cp := CurrencyPairWithDate{date, sourceCurrency, targetCurrency}
 	if sourceCurrency == targetCurrency {

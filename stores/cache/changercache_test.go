@@ -14,7 +14,7 @@ type exchangeRateStoreMock struct {
 	calls uint
 }
 
-func (mock *exchangeRateStoreMock) Convert(moneyAmount assets.MoneyAmount, targetCurrency assets.Currency, date time.Time) (assets.MoneyAmount, error) {
+func (mock *exchangeRateStoreMock) Change(moneyAmount assets.MoneyAmount, targetCurrency assets.Currency, date time.Time) (assets.MoneyAmount, error) {
 	mock.IncrementCalls()
 	return assets.MoneyAmount{Amount: moneyAmount.Amount * 2.0, Currency: targetCurrency}, nil
 }
@@ -41,7 +41,7 @@ func TestCachedExchangeRateStoreIsOnlyCalledOnce(t *testing.T) {
 	for i := 0; i < 1000; i++ {
 		n.Add(1)
 		go func() {
-			store.Convert(moneyAmount, currency, date)
+			store.Change(moneyAmount, currency, date)
 			n.Done()
 		}()
 	}
@@ -56,7 +56,7 @@ func TestCacheReturnsValueFromCachedStore(t *testing.T) {
 	currency := assets.Currency("USD")
 	date := time.Now()
 
-	actual, err := store.Convert(moneyAmount, currency, date)
+	actual, err := store.Change(moneyAmount, currency, date)
 
 	assert.AssertNoError(t, err)
 	expected := assets.MoneyAmount{Amount: 84.0, Currency: "USD"}
@@ -71,8 +71,8 @@ func TestCachedExchangeRateStoreIsOnlyCalledOnceWhenAmountsAreDifferent(t *testi
 	currency := assets.Currency("USD")
 	date := time.Now()
 
-	_, err1 := store.Convert(a, currency, date)
-	actual, err2 := store.Convert(b, currency, date)
+	_, err1 := store.Change(a, currency, date)
+	actual, err2 := store.Change(b, currency, date)
 
 	assert.AssertNoError(t, err1)
 	assert.AssertNoError(t, err2)

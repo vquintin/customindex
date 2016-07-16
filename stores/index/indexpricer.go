@@ -7,12 +7,15 @@ import (
 	"bitbucket.org/virgilequintin/customindex/stores"
 )
 
+// IndexPricer is able to price a fixed weight index.
 type IndexPricer struct {
-	Next      stores.Pricer
-	Head      stores.Pricer
-	RateStore stores.ExchangeRateStore
+	Next    stores.Pricer
+	Head    stores.Pricer
+	Changer stores.Changer
 }
 
+// UnitPrice price an index at the given date. If the asset is not an index, it calls the
+// next pricer in chain.
 func (store IndexPricer) UnitPrice(asset interface{}, date time.Time) (assets.MoneyAmount, error) {
 	switch asset := asset.(type) {
 	case assets.Index:
@@ -85,6 +88,6 @@ func (store IndexPricer) capitalValueInCurrency(asset interface{}, date time.Tim
 	if err != nil {
 		return maAndErr{ma, err}
 	}
-	cma, err := store.RateStore.Convert(ma, currency, date)
+	cma, err := store.Changer.Change(ma, currency, date)
 	return maAndErr{cma, err}
 }

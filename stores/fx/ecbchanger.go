@@ -9,10 +9,10 @@ import (
 	"github.com/openprovider/ecbrates"
 )
 
-type EcbExchangeRateStore struct {
+type EcbChanger struct {
 }
 
-func (store EcbExchangeRateStore) Convert(p assets.MoneyAmount, other assets.Currency, date time.Time) (assets.MoneyAmount, error) {
+func (store EcbChanger) Change(p assets.MoneyAmount, other assets.Currency, date time.Time) (assets.MoneyAmount, error) {
 	if p.Currency == other {
 		return p, nil
 	}

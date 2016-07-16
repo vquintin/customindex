@@ -10,10 +10,13 @@ import (
 	"github.com/doneland/yquotes"
 )
 
+// YahooPricer is a pricer able to price equities using the Yahoo finance API
 type YahooPricer struct {
 	Next stores.Pricer
 }
 
+// UnitPrice gives the price of an Equity at the given date. If the asset is not an equity, it calls the
+// next pricer in chain.
 func (store YahooPricer) UnitPrice(asset interface{}, date time.Time) (assets.MoneyAmount, error) {
 	switch asset := asset.(type) {
 	case assets.Equity:
@@ -32,7 +35,7 @@ func (store YahooPricer) unitPriceForEquity(equity assets.Equity, date time.Time
 		return assets.MoneyAmount{}, err
 	}
 	if len(prices) != 0 {
-		return assets.MoneyAmount{prices[0].Close, equity.Currency}, nil
+		return assets.MoneyAmount{Amount: prices[0].Close, Currency: equity.Currency}, nil
 	}
 	return assets.MoneyAmount{}, fmt.Errorf("No value found for %v before %v", equity.Symbol, date)
 }
