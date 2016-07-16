@@ -9,14 +9,14 @@ import (
 	"bitbucket.org/virgilequintin/customindex/stores/index"
 )
 
-func NewPriceStore() stores.PriceStore {
+func NewPricer() stores.Pricer {
 	store1 := stores.FailPriceStore{}
-	store2 := currency.CurrencyPriceStore{store1}
-	store3 := equity.YahooPriceStore{store2}
+	store2 := currency.CurrencyPricer{store1}
+	store3 := equity.YahooPricer{store2}
 	rateStore1 := fx.FixerExchangeRateStore{}
 	rateStore2 := cache.NewExchangeRateCache(rateStore1)
-	store4 := index.IndexPriceStore{store3, store3, rateStore2}
-	store5 := cache.NewPriceCache(store4)
+	store4 := index.IndexPricer{store3, store3, rateStore2}
+	store5 := cache.NewPricerCache(store4)
 	store4.Head = store5
 	return store5
 }

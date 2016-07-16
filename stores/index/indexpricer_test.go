@@ -22,13 +22,13 @@ var index1 = assets.Index{
 }
 
 func TestIndexStoreCallsNextInChainWhenAssetIsNotIndex(t *testing.T) {
-	headMock := mock.PriceStoreMock{}
+	headMock := mock.PricerMock{}
 	expected := assets.MoneyAmount{19.0, "USD"}
-	nextMock := mock.PriceStoreMock{false, map[mock.AssetAndDate]assets.MoneyAmount{
+	nextMock := mock.PricerMock{false, map[mock.AssetAndDate]assets.MoneyAmount{
 		mock.AssetAndDate{42, startDate}: expected,
 	}}
 	rateStoreMock := mock.ExchangeRateStoreMock{}
-	store := IndexPriceStore{&nextMock, &headMock, &rateStoreMock}
+	store := IndexPricer{&nextMock, &headMock, &rateStoreMock}
 
 	actual, err := store.UnitPrice(42, startDate)
 
@@ -39,17 +39,17 @@ func TestIndexStoreCallsNextInChainWhenAssetIsNotIndex(t *testing.T) {
 }
 
 func TestConvertToTargetCurrencyBeforeComputePerformanceRatio(t *testing.T) {
-	headMock := mock.PriceStoreMock{false, map[mock.AssetAndDate]assets.MoneyAmount{
+	headMock := mock.PricerMock{false, map[mock.AssetAndDate]assets.MoneyAmount{
 		mock.AssetAndDate{assets.Currency("USD"), startDate}: assets.MoneyAmount{1.0, "USD"},
 		mock.AssetAndDate{assets.Currency("USD"), endDate}:   assets.MoneyAmount{1.0, "USD"},
 	}}
-	nextMock := mock.PriceStoreMock{false, map[mock.AssetAndDate]assets.MoneyAmount{}}
+	nextMock := mock.PricerMock{false, map[mock.AssetAndDate]assets.MoneyAmount{}}
 	rates := map[mock.CurrencyPairWithDate]float64{
 		mock.CurrencyPairWithDate{startDate, "EUR", "USD"}: 1.25,
 		mock.CurrencyPairWithDate{endDate, "EUR", "USD"}:   1.00,
 	}
 	rateStoreMock := mock.ExchangeRateStoreMock{rates}
-	store := IndexPriceStore{&nextMock, &headMock, &rateStoreMock}
+	store := IndexPricer{&nextMock, &headMock, &rateStoreMock}
 	actual, err := store.UnitPrice(index1, endDate)
 	assert.AssertFalse(t, "The next store in chain was called", nextMock.Called)
 	assert.AssertNil(t, "An error occured", err)
@@ -68,19 +68,19 @@ var index2 = assets.Index{
 }
 
 func TestThatIndexWeightingIsNotObviouslyWrong(t *testing.T) {
-	headMock := mock.PriceStoreMock{false, map[mock.AssetAndDate]assets.MoneyAmount{
+	headMock := mock.PricerMock{false, map[mock.AssetAndDate]assets.MoneyAmount{
 		mock.AssetAndDate{assets.Currency("EUR"), startDate}: assets.MoneyAmount{1.0, "EUR"},
 		mock.AssetAndDate{assets.Currency("EUR"), endDate}:   assets.MoneyAmount{1.0, "EUR"},
 		mock.AssetAndDate{assets.Currency("USD"), startDate}: assets.MoneyAmount{1.0, "USD"},
 		mock.AssetAndDate{assets.Currency("USD"), endDate}:   assets.MoneyAmount{1.0, "USD"},
 	}}
-	nextMock := mock.PriceStoreMock{false, map[mock.AssetAndDate]assets.MoneyAmount{}}
+	nextMock := mock.PricerMock{false, map[mock.AssetAndDate]assets.MoneyAmount{}}
 	rates := map[mock.CurrencyPairWithDate]float64{
 		mock.CurrencyPairWithDate{startDate, "EUR", "USD"}: 1.50,
 		mock.CurrencyPairWithDate{endDate, "EUR", "USD"}:   1.00,
 	}
 	rateStoreMock := mock.ExchangeRateStoreMock{rates}
-	store := IndexPriceStore{&nextMock, &headMock, &rateStoreMock}
+	store := IndexPricer{&nextMock, &headMock, &rateStoreMock}
 	actual, err := store.UnitPrice(index2, endDate)
 	assert.AssertFalse(t, "The next store in chain was called", nextMock.Called)
 	assert.AssertNil(t, "An error occured.", err)

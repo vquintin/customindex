@@ -10,8 +10,8 @@ import (
 )
 
 func TestReturnsUnitOfCurrencyWhenAssetIsCurrency(t *testing.T) {
-	mock := mock.PriceStoreMock{false, map[mock.AssetAndDate]assets.MoneyAmount{}}
-	store := CurrencyPriceStore{&mock}
+	mock := mock.PricerMock{false, map[mock.AssetAndDate]assets.MoneyAmount{}}
+	store := CurrencyPricer{&mock}
 
 	actual, err := store.UnitPrice(assets.Currency("SGD"), time.Now())
 
@@ -22,8 +22,8 @@ func TestReturnsUnitOfCurrencyWhenAssetIsCurrency(t *testing.T) {
 }
 
 func TestCallsNextInChainWhenAssetIsNotCurrency(t *testing.T) {
-	mock := mock.PriceStoreMock{false, map[mock.AssetAndDate]assets.MoneyAmount{}}
-	store := CurrencyPriceStore{&mock}
+	mock := mock.PricerMock{false, map[mock.AssetAndDate]assets.MoneyAmount{}}
+	store := CurrencyPricer{&mock}
 
 	store.UnitPrice(42, time.Now())
 

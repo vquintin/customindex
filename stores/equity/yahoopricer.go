@@ -10,11 +10,11 @@ import (
 	"github.com/doneland/yquotes"
 )
 
-type YahooPriceStore struct {
-	Next stores.PriceStore
+type YahooPricer struct {
+	Next stores.Pricer
 }
 
-func (store YahooPriceStore) UnitPrice(asset interface{}, date time.Time) (assets.MoneyAmount, error) {
+func (store YahooPricer) UnitPrice(asset interface{}, date time.Time) (assets.MoneyAmount, error) {
 	switch asset := asset.(type) {
 	case assets.Equity:
 		return store.unitPriceForEquity(asset, date)
@@ -25,7 +25,7 @@ func (store YahooPriceStore) UnitPrice(asset interface{}, date time.Time) (asset
 
 const week = 168 * time.Hour
 
-func (store YahooPriceStore) unitPriceForEquity(equity assets.Equity, date time.Time) (assets.MoneyAmount, error) {
+func (store YahooPricer) unitPriceForEquity(equity assets.Equity, date time.Time) (assets.MoneyAmount, error) {
 	start := date.Add(-week)
 	prices, err := yquotes.GetDailyHistory(string(equity.Symbol), start, date)
 	if err != nil {

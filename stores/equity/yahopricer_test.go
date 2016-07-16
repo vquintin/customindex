@@ -10,8 +10,8 @@ import (
 )
 
 func TestYahooStoreCallsNextInChainWhenAssetIsNotEquity(t *testing.T) {
-	mock := mock.PriceStoreMock{}
-	store := YahooPriceStore{&mock}
+	mock := mock.PricerMock{}
+	store := YahooPricer{&mock}
 
 	store.UnitPrice(42, time.Now())
 
@@ -21,10 +21,10 @@ func TestYahooStoreCallsNextInChainWhenAssetIsNotEquity(t *testing.T) {
 func TestYahooStoreReturnsValueFromNextInChainWhenAssetIsNotEquity(t *testing.T) {
 	date := time.Date(2016, 01, 01, 0, 0, 0, 0, time.UTC)
 	expected := assets.MoneyAmount{19.0, "USD"}
-	mock := mock.PriceStoreMock{false, map[mock.AssetAndDate]assets.MoneyAmount{
+	mock := mock.PricerMock{false, map[mock.AssetAndDate]assets.MoneyAmount{
 		mock.AssetAndDate{42, date}: expected,
 	}}
-	store := YahooPriceStore{&mock}
+	store := YahooPricer{&mock}
 
 	actual, err := store.UnitPrice(42, date)
 

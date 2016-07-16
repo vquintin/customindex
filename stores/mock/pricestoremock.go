@@ -12,12 +12,12 @@ type AssetAndDate struct {
 	Date  time.Time
 }
 
-type PriceStoreMock struct {
+type PricerMock struct {
 	Called bool
 	Values map[AssetAndDate]assets.MoneyAmount
 }
 
-func (mock *PriceStoreMock) UnitPrice(asset interface{}, date time.Time) (assets.MoneyAmount, error) {
+func (mock *PricerMock) UnitPrice(asset interface{}, date time.Time) (assets.MoneyAmount, error) {
 	mock.Called = true
 	aAD := AssetAndDate{asset, date}
 	if v, ok := mock.Values[aAD]; ok {

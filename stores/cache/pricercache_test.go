@@ -33,7 +33,7 @@ func (mock *priceStoreMock) Calls() uint {
 
 func TestCachedPriceStoreIsOnlyCalledOnce(t *testing.T) {
 	mock := priceStoreMock{}
-	store := NewPriceCache(&mock)
+	store := NewPricerCache(&mock)
 	asset := 42
 	date := time.Now()
 	var n sync.WaitGroup

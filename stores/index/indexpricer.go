@@ -7,13 +7,13 @@ import (
 	"bitbucket.org/virgilequintin/customindex/stores"
 )
 
-type IndexPriceStore struct {
-	Next      stores.PriceStore
-	Head      stores.PriceStore
+type IndexPricer struct {
+	Next      stores.Pricer
+	Head      stores.Pricer
 	RateStore stores.ExchangeRateStore
 }
 
-func (store IndexPriceStore) UnitPrice(asset interface{}, date time.Time) (assets.MoneyAmount, error) {
+func (store IndexPricer) UnitPrice(asset interface{}, date time.Time) (assets.MoneyAmount, error) {
 	switch asset := asset.(type) {
 	case assets.Index:
 		return store.unitPriceForIndex(asset, date)
@@ -29,7 +29,7 @@ type ratioAndErr struct {
 
 const week = 168 * time.Hour
 
-func (store IndexPriceStore) unitPriceForIndex(index assets.Index, date time.Time) (assets.MoneyAmount, error) {
+func (store IndexPricer) unitPriceForIndex(index assets.Index, date time.Time) (assets.MoneyAmount, error) {
 	quit := make(chan interface{})
 	c := make(chan ratioAndErr)
 	var weightSum float64
@@ -60,7 +60,7 @@ type maAndErr struct {
 	err error
 }
 
-func (store IndexPriceStore) performanceRatio(asset interface{}, start time.Time, end time.Time, currency assets.Currency) (float64, error) {
+func (store IndexPricer) performanceRatio(asset interface{}, start time.Time, end time.Time, currency assets.Currency) (float64, error) {
 	initialValue := make(chan maAndErr)
 	finalValue := make(chan maAndErr)
 	go func() {
@@ -80,7 +80,7 @@ func (store IndexPriceStore) performanceRatio(asset interface{}, start time.Time
 	}
 }
 
-func (store IndexPriceStore) capitalValueInCurrency(asset interface{}, date time.Time, currency assets.Currency) maAndErr {
+func (store IndexPricer) capitalValueInCurrency(asset interface{}, date time.Time, currency assets.Currency) maAndErr {
 	ma, err := store.Head.UnitPrice(asset, date)
 	if err != nil {
 		return maAndErr{ma, err}

@@ -28,7 +28,7 @@ func main() {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
-	store := factory.NewPriceStore()
+	store := factory.NewPricer()
 	ma, err := store.UnitPrice(index, time.Now())
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
