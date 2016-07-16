@@ -3,8 +3,8 @@ package currency
 import (
 	"time"
 
-	"bitbucket.org/virgilequintin/customindex/assets"
-	"bitbucket.org/virgilequintin/customindex/stores"
+	"github.com/vquintin/customindex/assets"
+	"github.com/vquintin/customindex/stores"
 )
 
 // CurrencyPricer is a store used to retrieve the price of a currency.

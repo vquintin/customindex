@@ -1,7 +1,6 @@
 package cache
 
 import "sync"
-import "reflect"
 
 type entry struct {
 	res   result
@@ -27,9 +26,7 @@ type memo struct {
 type fct func(key interface{}) (interface{}, error)
 
 func (memo *memo) get(key interface{}) (value interface{}, err error) {
-	k := reflect.TypeOf(key).Kind()
-	hashable := k < reflect.Array || k == reflect.Ptr || k == reflect.UnsafePointer
-	if hashable {
+	if hashable(key) {
 		return memo.getFromCache(key)
 	}
 	return memo.f(key)

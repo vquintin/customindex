@@ -3,8 +3,8 @@ package cache
 import (
 	"time"
 
-	"bitbucket.org/virgilequintin/customindex/assets"
-	"bitbucket.org/virgilequintin/customindex/stores"
+	"github.com/vquintin/customindex/assets"
+	"github.com/vquintin/customindex/stores"
 )
 
 // ChangerCache is a cache for an exchange rate store.
@@ -22,7 +22,7 @@ type changerCacheKey struct {
 
 // Change converts a money amount in a source currency to a target currency at
 // the given date
-func (erc ChangerCache) Change(moneyAmount assets.MoneyAmount, targetCurrency assets.Currency, date time.Time) (assets.MoneyAmount, error) {
+func (erc *ChangerCache) Change(moneyAmount assets.MoneyAmount, targetCurrency assets.Currency, date time.Time) (assets.MoneyAmount, error) {
 	key := changerCacheKey{assets.MoneyAmount{Amount: 1.0, Currency: moneyAmount.Currency}, targetCurrency, date}
 	val, err := erc.get(key)
 	return val.(assets.MoneyAmount).Mul(moneyAmount.Amount), err

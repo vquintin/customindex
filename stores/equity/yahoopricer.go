@@ -4,10 +4,9 @@ import (
 	"fmt"
 	"time"
 
-	"bitbucket.org/virgilequintin/customindex/assets"
-	"bitbucket.org/virgilequintin/customindex/stores"
-
 	"github.com/doneland/yquotes"
+	"github.com/vquintin/customindex/assets"
+	"github.com/vquintin/customindex/stores"
 )
 
 // YahooPricer is a pricer able to price equities using the Yahoo finance API

@@ -1,10 +1,13 @@
 package index
 
 import (
+	"reflect"
 	"time"
 
-	"bitbucket.org/virgilequintin/customindex/assets"
-	"bitbucket.org/virgilequintin/customindex/stores"
+	"fmt"
+
+	"github.com/vquintin/customindex/assets"
+	"github.com/vquintin/customindex/stores"
 )
 
 // IndexPricer is able to price a fixed weight index.
@@ -84,6 +87,7 @@ func (store IndexPricer) performanceRatio(asset interface{}, start time.Time, en
 }
 
 func (store IndexPricer) capitalValueInCurrency(asset interface{}, date time.Time, currency assets.Currency) maAndErr {
+	fmt.Printf("Calling %v\n", reflect.TypeOf(store.Head))
 	ma, err := store.Head.UnitPrice(asset, date)
 	if err != nil {
 		return maAndErr{ma, err}

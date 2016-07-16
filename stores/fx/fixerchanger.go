@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
-	"bitbucket.org/virgilequintin/customindex/assets"
+	"github.com/vquintin/customindex/assets"
 )
 
 type rates struct {

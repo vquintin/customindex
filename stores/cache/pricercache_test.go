@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"bitbucket.org/virgilequintin/customindex/assert"
-	"bitbucket.org/virgilequintin/customindex/assets"
+	"github.com/vquintin/customindex/assert"
+	"github.com/vquintin/customindex/assets"
 )
 
 type pricerMock struct {

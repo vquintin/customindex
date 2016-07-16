@@ -8,8 +8,8 @@ import (
 	"os"
 	"time"
 
-	"bitbucket.org/virgilequintin/customindex/assets"
-	"bitbucket.org/virgilequintin/customindex/stores/factory"
+	"github.com/vquintin/customindex/assets"
+	"github.com/vquintin/customindex/stores/factory"
 )
 
 func main() {

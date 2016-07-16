@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"bitbucket.org/virgilequintin/customindex/assets"
+	"github.com/vquintin/customindex/assets"
 )
 
 type CurrencyPairWithDate struct {
@@ -17,7 +17,7 @@ type ChangerMock struct {
 	Rates map[CurrencyPairWithDate]float64
 }
 
-func (store *ChangerMock) Convert(moneyAmount assets.MoneyAmount, targetCurrency assets.Currency, date time.Time) (assets.MoneyAmount, error) {
+func (store *ChangerMock) Change(moneyAmount assets.MoneyAmount, targetCurrency assets.Currency, date time.Time) (assets.MoneyAmount, error) {
 	sourceCurrency := moneyAmount.Currency
 	cp := CurrencyPairWithDate{date, sourceCurrency, targetCurrency}
 	if sourceCurrency == targetCurrency {

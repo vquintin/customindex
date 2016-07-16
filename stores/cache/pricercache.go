@@ -3,8 +3,8 @@ package cache
 import (
 	"time"
 
-	"bitbucket.org/virgilequintin/customindex/assets"
-	"bitbucket.org/virgilequintin/customindex/stores"
+	"github.com/vquintin/customindex/assets"
+	"github.com/vquintin/customindex/stores"
 )
 
 // PricerCache is a cache for an exchange rate store.
@@ -22,7 +22,7 @@ type pricerCacheKey struct {
 // UnitPrice gives the price of an asset at the closest date before the given date.
 // The cached store is guaranteed to be called only once on an asset/date pair except
 // when the asset is non hashable.
-func (pc PricerCache) UnitPrice(asset interface{}, date time.Time) (assets.MoneyAmount, error) {
+func (pc *PricerCache) UnitPrice(asset interface{}, date time.Time) (assets.MoneyAmount, error) {
 	key := pricerCacheKey{asset, date}
 	val, err := pc.get(key)
 	return val.(assets.MoneyAmount), err

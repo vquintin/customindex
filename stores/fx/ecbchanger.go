@@ -4,14 +4,16 @@ import (
 	"fmt"
 	"time"
 
-	"bitbucket.org/virgilequintin/customindex/assets"
-
 	"github.com/openprovider/ecbrates"
+	"github.com/vquintin/customindex/assets"
 )
 
+// EcbChanger is a money amount changer which uses the rates found on the European
+// Central Bank website
 type EcbChanger struct {
 }
 
+// Change converts a money amount to another currency.
 func (store EcbChanger) Change(p assets.MoneyAmount, other assets.Currency, date time.Time) (assets.MoneyAmount, error) {
 	if p.Currency == other {
 		return p, nil

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"bitbucket.org/virgilequintin/customindex/assets"
+	"github.com/vquintin/customindex/assets"
 )
 
 type AssetAndDate struct {

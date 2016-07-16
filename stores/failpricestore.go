@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"bitbucket.org/virgilequintin/customindex/assets"
+	"github.com/vquintin/customindex/assets"
 )
 
 // FailPricer is an always failing Pricer. It is useful to terminate the chain of pricers.
