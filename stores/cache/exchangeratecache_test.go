@@ -16,7 +16,7 @@ type exchangeRateStoreMock struct {
 
 func (mock *exchangeRateStoreMock) Convert(moneyAmount assets.MoneyAmount, targetCurrency assets.Currency, date time.Time) (assets.MoneyAmount, error) {
 	mock.IncrementCalls()
-	return assets.MoneyAmount{moneyAmount.Amount * 2.0, targetCurrency}, nil
+	return assets.MoneyAmount{Amount: moneyAmount.Amount * 2.0, Currency: targetCurrency}, nil
 }
 
 func (mock *exchangeRateStoreMock) IncrementCalls() {
@@ -34,7 +34,7 @@ func (mock *exchangeRateStoreMock) Calls() uint {
 func TestCachedExchangeRateStoreIsOnlyCalledOnce(t *testing.T) {
 	mock := exchangeRateStoreMock{}
 	store := NewExchangeRateCache(&mock)
-	moneyAmount := assets.MoneyAmount{1.0, "EUR"}
+	moneyAmount := assets.MoneyAmount{Amount: 1.0, Currency: "EUR"}
 	currency := assets.Currency("USD")
 	date := time.Now()
 	var n sync.WaitGroup
@@ -52,22 +52,22 @@ func TestCachedExchangeRateStoreIsOnlyCalledOnce(t *testing.T) {
 func TestCacheReturnsValueFromCachedStore(t *testing.T) {
 	mock := exchangeRateStoreMock{}
 	store := NewExchangeRateCache(&mock)
-	moneyAmount := assets.MoneyAmount{42.0, "EUR"}
+	moneyAmount := assets.MoneyAmount{Amount: 42.0, Currency: "EUR"}
 	currency := assets.Currency("USD")
 	date := time.Now()
 
 	actual, err := store.Convert(moneyAmount, currency, date)
 
 	assert.AssertNoError(t, err)
-	expected := assets.MoneyAmount{84.0, "USD"}
+	expected := assets.MoneyAmount{Amount: 84.0, Currency: "USD"}
 	assert.AssertEquals(t, "The result is not as expected", expected, actual)
 }
 
 func TestCachedExchangeRateStoreIsOnlyCalledOnceWhenAmountsAreDifferent(t *testing.T) {
 	mock := exchangeRateStoreMock{}
 	store := NewExchangeRateCache(&mock)
-	a := assets.MoneyAmount{42.0, "EUR"}
-	b := assets.MoneyAmount{60.0, "EUR"}
+	a := assets.MoneyAmount{Amount: 42.0, Currency: "EUR"}
+	b := assets.MoneyAmount{Amount: 60.0, Currency: "EUR"}
 	currency := assets.Currency("USD")
 	date := time.Now()
 
@@ -76,7 +76,7 @@ func TestCachedExchangeRateStoreIsOnlyCalledOnceWhenAmountsAreDifferent(t *testi
 
 	assert.AssertNoError(t, err1)
 	assert.AssertNoError(t, err2)
-	expected := assets.MoneyAmount{120.0, "USD"}
+	expected := assets.MoneyAmount{Amount: 120.0, Currency: "USD"}
 	assert.AssertEquals(t, "The result is not as expected", expected, actual)
 	assert.AssertEquals(t, "The cached store was not called once", uint(1), mock.Calls())
 }
